@@ -1,0 +1,89 @@
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres_db_lab
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: lab
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      app_network:
+#        ipv4_address: 172.19.0.3
+
+  spark:
+    image: bitnami/spark:latest
+    container_name: spark_master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    networks:
+      app_network:
+#        ipv4_address: 172.19.0.2
+
+  spark-worker:
+    image: bitnami/spark:latest
+    container_name: spark_worker
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
+      - SPARK_WORKER_MEMORY=3G
+      - SPARK_WORKER_CORES=3
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+      - SPARK_EXECUTOR_EXTRA_CLASSPATH=/opt/bitnami/spark/jars/postgresql-42.7.4.jar
+    volumes:
+      - ./jdbc/postgresql-42.7.4.jar:/opt/bitnami/spark/jars/postgresql-42.7.4.jar
+    depends_on:
+      - spark
+    networks:
+      app_network:
+#        ipv4_address: 172.19.0.4
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lab_app
+    depends_on:
+      - db
+      - spark
+      - spark-worker
+    environment:
+      PG_HOST: db
+      PG_PORT: 5432
+      PG_USER: user
+      PG_PASSWORD: password
+      PG_DB: lab
+      SPARK_HOST: spark
+      SPARK_PORT: 7077
+      #SPARK_DRIVER_IP: 172.19.0.5
+    ports:
+      - "5000:8000"
+    networks:
+      app_network:
+#        ipv4_address: 172.19.0.5
+
+volumes:
+  postgres_data:
+
+networks:
+  app_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.0.0/16
+          gateway: 172.19.0.1

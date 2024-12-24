@@ -1,0 +1,52 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Jinja Example</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <h1>Действия</h1>
+    <ol>
+        <li><a href="/load_source">Загрузить исходные данные</a></li>
+        <li><a href="/erase_data">Удалить данные DWH (опционально)</a></li>
+        <li><a href="/load_data">Загрузить данные DWH</a></li>
+        <li><a href="/get_data_mart">Прочитать витрину</a></li>
+    </ol>
+
+    <h1>Результаты</h1>
+    {% if error %}
+        <h2>Ошибка</h2>
+        <p style="color: red">{{ error }}</p>
+    {% endif %}
+    {% if log %}
+        <h2>Журнал операций</h2>
+        <table>
+        {% for string in log %}
+            <tr><td>{{ string }}</td></tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if data %}
+        <h2>Данные витрины</h2>
+        <table>
+            <tr>
+                {% for col in data[0] %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        {% for row in data[1] %}
+            <tr>
+                {% for cell in row %}
+                    <td>{{ cell }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+
+</body>
+</html>

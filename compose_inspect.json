@@ -1,0 +1,110 @@
+{
+    "postgres_db_lab": {
+        "env": [
+            "POSTGRES_USER=user",
+            "POSTGRES_PASSWORD=password",
+            "POSTGRES_DB=lab",
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/17/bin",
+            "GOSU_VERSION=1.17",
+            "LANG=en_US.utf8",
+            "PG_MAJOR=17",
+            "PG_VERSION=17.0-1.pgdg120+1",
+            "PGDATA=/var/lib/postgresql/data"
+        ],
+        "network": {
+            "spark_app_network": {
+                "dns_names": [
+                    "postgres_db_lab",
+                    "db",
+                    "1ef6a82927a4"
+                ],
+                "gateway": "172.19.0.1",
+                "ip": "172.19.0.3"
+            }
+        },
+        "ports": [
+            "5432/tcp"
+        ],
+        "running": true
+    },
+    "spark_master": {
+        "env": [
+            "SPARK_RPC_AUTHENTICATION_ENABLED=no",
+            "SPARK_RPC_ENCRYPTION_ENABLED=no",
+            "SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no",
+            "SPARK_SSL_ENABLED=no",
+            "SPARK_USER=spark",
+            "SPARK_MODE=master",
+            "PATH=/opt/bitnami/python/bin:/opt/bitnami/java/bin:/opt/bitnami/spark/bin:/opt/bitnami/spark/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "HOME=/",
+            "OS_ARCH=amd64",
+            "OS_FLAVOUR=debian-12",
+            "OS_NAME=linux",
+            "APP_VERSION=3.5.3",
+            "BITNAMI_APP_NAME=spark",
+            "JAVA_HOME=/opt/bitnami/java",
+            "LD_LIBRARY_PATH=/opt/bitnami/python/lib:/opt/bitnami/spark/venv/lib/python3.12/site-packages/numpy.libs:",
+            "LIBNSS_WRAPPER_PATH=/opt/bitnami/common/lib/libnss_wrapper.so",
+            "NSS_WRAPPER_GROUP=/opt/bitnami/spark/tmp/nss_group",
+            "NSS_WRAPPER_PASSWD=/opt/bitnami/spark/tmp/nss_passwd",
+            "PYTHONPATH=/opt/bitnami/spark/python/:",
+            "SPARK_HOME=/opt/bitnami/spark"
+        ],
+        "network": {
+            "spark_app_network": {
+                "dns_names": [
+                    "spark_master",
+                    "spark",
+                    "81068f9089c8"
+                ],
+                "gateway": "172.19.0.1",
+                "ip": "172.19.0.2"
+            }
+        },
+        "ports": [
+            "7077/tcp",
+            "8080/tcp"
+        ],
+        "running": true
+    },
+    "spark_worker": {
+        "env": [
+            "SPARK_MASTER_URL=spark://spark_master:7077",
+            "SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no",
+            "SPARK_WORKER_CORES=1",
+            "SPARK_SSL_ENABLED=no",
+            "SPARK_MODE=worker",
+            "SPARK_RPC_ENCRYPTION_ENABLED=no",
+            "SPARK_USER=spark",
+            "SPARK_RPC_AUTHENTICATION_ENABLED=no",
+            "SPARK_WORKER_MEMORY=1G",
+            "PATH=/opt/bitnami/python/bin:/opt/bitnami/java/bin:/opt/bitnami/spark/bin:/opt/bitnami/spark/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "HOME=/",
+            "OS_ARCH=amd64",
+            "OS_FLAVOUR=debian-12",
+            "OS_NAME=linux",
+            "APP_VERSION=3.5.3",
+            "BITNAMI_APP_NAME=spark",
+            "JAVA_HOME=/opt/bitnami/java",
+            "LD_LIBRARY_PATH=/opt/bitnami/python/lib:/opt/bitnami/spark/venv/lib/python3.12/site-packages/numpy.libs:",
+            "LIBNSS_WRAPPER_PATH=/opt/bitnami/common/lib/libnss_wrapper.so",
+            "NSS_WRAPPER_GROUP=/opt/bitnami/spark/tmp/nss_group",
+            "NSS_WRAPPER_PASSWD=/opt/bitnami/spark/tmp/nss_passwd",
+            "PYTHONPATH=/opt/bitnami/spark/python/:",
+            "SPARK_HOME=/opt/bitnami/spark"
+        ],
+        "network": {
+            "spark_app_network": {
+                "dns_names": [
+                    "spark_worker",
+                    "spark-worker",
+                    "38310b247447"
+                ],
+                "gateway": "172.19.0.1",
+                "ip": "172.19.0.4"
+            }
+        },
+        "ports": [],
+        "running": true
+    }
+}

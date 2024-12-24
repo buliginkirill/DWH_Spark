@@ -1,0 +1,4 @@
+.venv
+.compose_inspect.json
+.start.py
+__pycache__/
